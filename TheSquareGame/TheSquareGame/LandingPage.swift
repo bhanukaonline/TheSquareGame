@@ -21,7 +21,7 @@ struct LandingPage: View {
                 
                 // Start Game Button
                 NavigationLink(destination: ContentView()) {
-                    Text("Start Game")
+                    Text("START GAME")
                         .font(.title)
                         .padding()
                         .background(Color.blue)
@@ -33,7 +33,7 @@ struct LandingPage: View {
                 
                 // High Score Button
                 NavigationLink(destination: HighScoreView()) {
-                    Text("View High Scores")
+                    Text("HIGH SCORES")
                         .font(.title)
                         .padding()
                         .background(Color.green)
@@ -47,7 +47,7 @@ struct LandingPage: View {
                 Button(action: {
                     exit(0) // Exits the app
                 }) {
-                    Text("Exit")
+                    Text("EXIT GAME")
                         .font(.title)
                         .padding()
                         .background(Color.red)
