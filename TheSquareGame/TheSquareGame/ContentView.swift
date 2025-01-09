@@ -56,14 +56,8 @@ struct LazyGridView: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 10) {
                 ForEach(colors) { namedColor in
-                    Button(action: {
+                    PressableButton(namedColor: namedColor) {
                         buttonTapped(namedColor: namedColor)
-                    }) {
-                        Rectangle()
-                            .fill(namedColor.color)
-                            .frame(height: 100) // Square size 100x100
-                            .cornerRadius(8)
-                            
                     }
                 }
             }
@@ -74,6 +68,32 @@ struct LazyGridView: View {
     // Action for button tap
     func buttonTapped(namedColor: NamedColor) {
         print("Tapped color: \(namedColor.name)")
+    }
+}
+
+// Custom Button View with Animation
+struct PressableButton: View {
+    let namedColor: NamedColor
+    let action: () -> Void
+    
+    @State private var isPressed = false // Track button press state
+    
+    var body: some View {
+        Button(action: {
+            action() // Perform the button action
+        }) {
+            Rectangle()
+                .fill(namedColor.color)
+                .frame(height: 100) // Square size 100x100
+                .cornerRadius(8)
+                .scaleEffect(isPressed ? 0.9 : 1.0) // Scale down when pressed
+                .animation(.spring(response: 0.2, dampingFraction: 0.5), value: isPressed) // Smooth spring animation
+        }
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { _ in isPressed = true } // Press detected
+                .onEnded { _ in isPressed = false } // Release detected
+        )
     }
 }
 
