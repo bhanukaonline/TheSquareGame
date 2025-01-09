@@ -63,12 +63,7 @@ struct LazyGridView: View {
                             .fill(namedColor.color)
                             .frame(height: 100) // Square size 100x100
                             .cornerRadius(8)
-                            .overlay(
-                                Text(namedColor.name)
-                                    .foregroundColor(.white)
-                                    .font(.caption)
-                                    .bold()
-                            )
+                            
                     }
                 }
             }
