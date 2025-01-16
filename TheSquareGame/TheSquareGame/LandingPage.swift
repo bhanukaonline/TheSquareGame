@@ -31,6 +31,17 @@ struct LandingPage: View {
                 
                 Spacer().frame(height: 20)
                 
+                NavigationLink(destination: GuideView()) {
+                    Text("User Guide")
+                        .font(.title)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                
+                Spacer().frame(height: 20)
+                
                 // High Score Button
                 NavigationLink(destination: HighScoreView()) {
                     Text("HIGH SCORES")
@@ -91,6 +102,42 @@ struct HighScoreView: View {
            let savedScores = try? JSONDecoder().decode([ScoreEntry].self, from: data) {
             scores = savedScores
         }
+    }
+}
+
+struct GuideView: View {
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                Text("How to Play The Square Game")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.bottom, 10)
+                
+                Text("1. Start the game by clicking 'START GAME' on the landing page.")
+                    .font(.body)
+                
+                Text("2. Match pairs of squares with the same color to score points.")
+                    .font(.body)
+                
+                Text("3. If you make a wrong match, the game ends.")
+                    .font(.body)
+                
+                Text("4. Check your high scores by clicking 'HIGH SCORES' on the landing page.")
+                    .font(.body)
+                
+                Text("5. If you want to exit, click 'EXIT GAME'.")
+                    .font(.body)
+                
+                Spacer()
+                
+                Text("Enjoy the game!")
+                    .font(.headline)
+                    .foregroundColor(.blue)
+            }
+            .padding()
+        }
+        .navigationTitle("User Guide")
     }
 }
 
