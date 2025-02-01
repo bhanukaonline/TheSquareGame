@@ -5,7 +5,6 @@
 //  Created by Bhanuka on 1/9/25.
 //
 
-
 import SwiftUI
 
 struct LandingPage: View {
@@ -20,7 +19,7 @@ struct LandingPage: View {
                 Spacer()
                 
                 // Start Game Button
-                NavigationLink(destination: ContentView()) {
+                NavigationLink(destination: ContentView().navigationBarBackButtonHidden(true)) {
                     Text("START GAME")
                         .font(.title)
                         .padding()
@@ -68,14 +67,21 @@ struct LandingPage: View {
                 
                 Spacer()
             }
-            .navigationBarHidden(true) // Hide the navigation bar for this screen
+            .navigationBarHidden(true) // Hide navigation bar for LandingPage
             .padding()
         }
     }
 }
 
 struct HighScoreView: View {
-    @State private var scores: [ScoreEntry] = []
+    // Helper method to load scores for a given difficulty.
+    func loadScores(for difficulty: Difficulty) -> [ScoreEntry] {
+        if let data = UserDefaults.standard.data(forKey: difficulty.scoresKey),
+           let savedScores = try? JSONDecoder().decode([ScoreEntry].self, from: data) {
+            return savedScores
+        }
+        return []
+    }
     
     var body: some View {
         VStack {
@@ -83,25 +89,28 @@ struct HighScoreView: View {
                 .font(.largeTitle)
                 .padding()
             
-            List(scores, id: \.date) { scoreEntry in
-                HStack {
-                    Text("Score: \(scoreEntry.score)")
-                    Spacer()
-                    Text("\(scoreEntry.date, formatter: DateFormatter.shortDateFormatter)")
+            List {
+                ForEach(Difficulty.allCases) { difficulty in
+                    Section(header: Text("\(difficulty.rawValue) High Scores").font(.headline)) {
+                        let scores = loadScores(for: difficulty).sorted { $0.score > $1.score }
+                        if scores.isEmpty {
+                            Text("No high scores yet.")
+                        } else {
+                            ForEach(scores) { scoreEntry in
+                                HStack {
+                                    Text("\(scoreEntry.name)")
+                                    Spacer()
+                                    Text("Score: \(scoreEntry.score)")
+                                    Spacer()
+                                    Text("\(scoreEntry.date, formatter: DateFormatter.shortDateFormatter)")
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            .onAppear {
-                loadScores()
-            }
         }
-    }
-    
-    // Load scores from UserDefaults
-    func loadScores() {
-        if let data = UserDefaults.standard.data(forKey: "scores"),
-           let savedScores = try? JSONDecoder().decode([ScoreEntry].self, from: data) {
-            scores = savedScores
-        }
+        /*.navigationBarBackButtonHidden(true)*/ // Hide back button
     }
 }
 
@@ -138,6 +147,7 @@ struct GuideView: View {
             .padding()
         }
         .navigationTitle("User Guide")
+        /*.navigationBarBackButtonHidden(true)*/ // Hide back button
     }
 }
 
